@@ -20,7 +20,7 @@ classdef data
     methods        
         function loaded = load(data, num, amount)
         % will return an array of 1000 pictures of the given number
-        %loaded = zeros(amount,28,28);
+        loaded = zeros(amount,28,28);
         data.number = num;
         
         current_file = mfilename('fullpath');
@@ -60,8 +60,8 @@ classdef data
             case 9
                 fileIn = fopen(data.file9,'r');    
         end %switch number
-        t1=fread(fileIn,[28 28],'uchar');
-        loaded = t1;
+        %[t1,N]=fread(fileIn,[28 28],'uchar');
+        %open = t1;
         %{
         for i =1:amount
             loaded(i) = fread(fileIn,[28 28],'uchar');

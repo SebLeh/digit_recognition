@@ -11,16 +11,16 @@ import data;
 
 %%% Testing %%%
 
-%{
+
 data_obj = data;
 
 
-num = 1;
+num = 8;
 amount = 1000;
-imgs = data_obj.load(1, amount);
-%}
+imgs = data_obj.load(7, amount);
 
-%imshow(imgs);
+
+imshow(imgs);
 
 %getReport(data_obj.ex_no_digit(num));
 
