@@ -1,0 +1,23 @@
+
+classdef nn
+    properties
+        database_learn = zeros(850,28,28);
+        database_test = zeros;
+        database_validate;
+    end
+    methods
+        function import
+           import data; 
+           
+        end %import
+        function learn
+            
+        end %learn
+        function test
+            
+        end %test
+        function validate
+            
+        end %validate
+    end
+end
