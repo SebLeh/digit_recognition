@@ -15,15 +15,12 @@ import data;
 data_obj = data;
 
 
-num = 7;
+num = 5;
 amount = 1000;
 imgs = data_obj.load(num, amount);
 
-img = imgs(1,:,:);
-img = squeeze(img);
 
-imshow(img);
-
+imshow(imgs);
 
 %getReport(data_obj.ex_no_digit(num));
 

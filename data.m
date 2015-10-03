@@ -10,6 +10,7 @@ classdef data
         file7;
         file8;
         file9;
+        loaded;
     end %private properties
     
     properties (Access = 'public')
@@ -19,9 +20,14 @@ classdef data
     
     methods        
         function loaded = load(data, num, amount)
-        % will return an array of 1000 pictures of the given number
+        % will return an array of up to 1000 pictures of the given number
         %loaded = zeros(amount,28,28);
         data.number = num;
+        
+        if amount > 1000
+            amount = 1000;
+        end
+        loaded = zeros(amount,28,28);
         
         current_file = mfilename('fullpath');
         path = fileparts(current_file);
@@ -60,13 +66,19 @@ classdef data
             case 9
                 fileIn = fopen(data.file9,'r');    
         end %switch number
-        t1=fread(fileIn,[28 28],'uchar');
-        loaded = t1;
         %{
-        for i =1:amount
-            loaded(i) = fread(fileIn,[28 28],'uchar');
-        end %fo
+        t1=fread(fileIn,[28 28],'uchar');
+        t1 = transpose(t1);
+        loaded = t1;
         %}
+        
+        for i =1:amount
+            img = fread(fileIn,[28 28],'uchar');
+            loaded(i,:,:) = transpose(img);
+            %loaded(i,:,:) = fread(fileIn,[28 28],'uchar');
+            %loaded(i) = transpose(loaded(i));
+        end %for(i)
+        
         end %method open
     end %methods
 end
