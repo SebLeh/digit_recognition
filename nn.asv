@@ -5,27 +5,35 @@ classdef nn
         database_learn = zeros(10,850,28,28);      %850 training examples for each digit
         database_test = zeros(10,100,28,28);       %100 test samples
         database_validate = zeros(10,50,28,28);    %50 sets left untouched for validation
+        
     end
+    properties(Access = 'private')
+        error_learn = zeros(1,850);
+        error_test = zeros(1,100);
+        weights = randn(785,10)/10;     % 785 = 28x28 + bias unit
+    end %private
     methods
         function import(nn)
            import data; 
            data_obj = data;
            for i=1:10
-               database(i,:,:,:) = data_obj.load(i-1, 10);
-               database_learn(i,:,:,:) = database(i,1:8,:,:);
-               databse_test(i,:,:,:) = database(i,9,:,:);
-               databse_validate(i,:,:,:) = database(i,10,:,:);
+               database(i,:,:,:) = data_obj.load(i-1, 1000);
+               database_learn(i,:,:,:) = database(i,1:850,:,:);
+               databse_test(i,:,:,:) = database(i,851:950,:,:);
+               databse_validate(i,:,:,:) = database(i,951:1000,:,:);
            end %for(i)
-           a;
            
         end %import
-        function learn
+        function learn(nn)
             
         end %learn
-        function test
+        function training(nn, sample, label)
+            
+        end
+        function test(nn, sample, label)
             
         end %test
-        function validate
+        function validate(nn)
             
         end %validate
     end

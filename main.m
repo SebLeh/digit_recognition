@@ -16,6 +16,7 @@ data_obj = data;
 NN = nn;
 
 NN.import();
+NN.learn_regular();
 
 
 num = 7;
