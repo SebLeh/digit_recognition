@@ -1,13 +1,22 @@
 
 classdef nn
     properties
-        database_learn = zeros(850,28,28);
-        database_test = zeros;
-        database_validate;
+        database = zeros(10,1000,28,28);
+        database_learn = zeros(10,850,28,28);      %850 training examples for each digit
+        database_test = zeros(10,100,28,28);       %100 test samples
+        database_validate = zeros(10,50,28,28);    %50 sets left untouched for validation
     end
     methods
-        function import
+        function import(nn)
            import data; 
+           data_obj = data;
+           for i=1:10
+               database(i,:,:,:) = data_obj.load(i-1, 10);
+               database_learn(i,:,:,:) = database(i,1:8,:,:);
+               databse_test(i,:,:,:) = database(i,9,:,:);
+               databse_validate(i,:,:,:) = database(i,10,:,:);
+           end %for(i)
+           a;
            
         end %import
         function learn

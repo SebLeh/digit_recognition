@@ -1,6 +1,5 @@
 
 import nn;
-import learn;
 import data;
 
 
@@ -13,6 +12,10 @@ import data;
 
 
 data_obj = data;
+
+NN = nn;
+
+NN.import();
 
 
 num = 7;
