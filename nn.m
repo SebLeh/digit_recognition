@@ -1,11 +1,12 @@
 
 classdef nn
     properties
-        database = zeros(10,10,28,28);
+        database = zeros(10,1000,28,28);
         database_learn = zeros(10,850,28,28);      %850 training examples for each digit
         database_test = zeros(10,100,28,28);       %100 test samples
         database_validate = zeros(10,50,28,28);    %50 sets left untouched for validation
-        
+        lerning_rate = 0.2;
+        testing;
     end
     properties(Access = 'private')
         error_learn = zeros(1,850);
@@ -17,12 +18,14 @@ classdef nn
            import data; 
            data_obj = data;
            for i=1:10
-               nn.database(i,:,:,:) = data_obj.load(i-1, 10);
-               test = nn.database(2,10,:,:);
-               test = squeeze(test);
+               nn.database(i,1:1000,:,:) = data_obj.load(i-1, 1000);
+               %test = nn.database(1,3,:,:);
+               %test = squeeze(test);
                nn.database_learn(i,:,:,:) = nn.database(i,1:850,:,:);
                nn.database_test(i,:,:,:) = nn.database(i,851:950,:,:);
                nn.database_validate(i,:,:,:) = nn.database(i,951:1000,:,:);
+               test = nn.database_learn(1,1,:,:);
+               nn.testing = squeeze(test);
            end %for(i)
            
         end %import
