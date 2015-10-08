@@ -1,12 +1,11 @@
 
 classdef nn
     properties
-        database = zeros(10,1000,28,28);
-        database_learn = zeros(10,850,28,28);      %850 training examples for each digit
-        database_test = zeros(10,100,28,28);       %100 test samples
-        database_validate = zeros(10,50,28,28);    %50 sets left untouched for validation
-        lerning_rate = 0.2;
-        test;
+        database;
+        database_learn;      %850 training examples for each digit
+        database_test;       %100 test samples
+        database_validate;    %50 sets left untouched for validation
+        learning_rate;
     end
     properties(Access = 'private')
         error_learn = zeros(1,850);
@@ -14,22 +13,29 @@ classdef nn
         weights = randn(785,10)/10;     % 785 = 28x28 + bias unit
     end %private
     methods
-        function import(nn)
+        function nn = nn()
+            nn.database = zeros(10,1000,28,28);
+            nn.database_learn = zeros(10,850,28,28);      %850 training examples for each digit
+            nn.database_test = zeros(10,100,28,28);       %100 test samples
+            nn.database_validate = zeros(10,50,28,28);    %50 sets left untouched for validation
+            nn.learning_rate = 0.2;      
+            error_learn = zeros(1,850);
+            error_test = zeros(1,100);
+            weights = randn(785,10)/10;     % 785 = 28x28 + bias unit      
+        end
+        
+        function nn = import(nn)
            import data; 
            data_obj = data;
            for i=1:10
-               nn.database(i,1:1000,:,:) = data_obj.load(i-1, 1000);
-               %test = nn.database(1,3,:,:);
-               %test = squeeze(test);
+               nn.database(i,:,:,:) = data_obj.load(i-1, 1000);
                nn.database_learn(i,:,:,:) = nn.database(i,1:850,:,:);
-               nn.database_test(i,1:100,:,:) = nn.database(i,851:950,:,:);
-               nn.database_validate(i,1:50,:,:) = nn.database(i,951:1000,:,:);
-               test = nn.database_learn(1,1,:,:);
-               test = squeeze(test);
+               nn.database_test(i,:,:,:) = nn.database(i,851:950,:,:);
+               nn.database_validate(i,:,:,:) = nn.database(i,951:1000,:,:);
            end %for(i)
-           
+           %nn.learn_regular();
         end %import
-        function learn_regular(nn) %one sample per class everytime; all after another
+        function nn = learn_regular(nn) %one sample per class everytime; all after another
             for i=1:10
                for j=1:850
                    sample = nn.database_learn(i,j,:,:);
