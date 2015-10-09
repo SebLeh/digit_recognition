@@ -60,9 +60,10 @@ classdef nn
                        end
                    end %for(k)
                    sample = nn.normalize_input(sample);
-                   nn.outputs = nn.feedforward(sample);
+                   nn.inputs = nn.calc_inputs(sample);
+                   nn.outputs = nn.feedforward(nn.inputs);
                    nn.error_learn(ii) = abs(nn.outputs(j)-label(j));
-                   %nn.weights = nn.adapt_weights_simple(nn.error_learn(ii));
+                   nn.weights = nn.adapt_weights_simple(nn.error_learn(ii), nn.inputs);
                end %for(j)
                
             end %for(i)
@@ -72,21 +73,12 @@ classdef nn
             
         end %learn_random
         
-        function output = feedforward(nn, sample)
+        function output = feedforward(nn, inputs)
             output = zeros(1,10);
-            nn.inputs = nn.calc_inputs(sample);
             for i = 1:10    %output neurons
                 net = 1 * nn.weights(1,i);
                 for j = 1:784
-                    %{
-                    if mod(j,28) == 0
-                        x = 28;
-                    else
-                        x = mod(j,28);
-                    end
-                    y = ceil(j/28); %round up to next integer
-                    %}
-                    net = net + nn.inputs(j)* nn.weights(j+1,i);
+                    net = net + inputs(j)* nn.weights(j+1,i);
                 end % for(j)
                 output(i) = 1 / (1+exp(-net)); % sigmoid
             end % for(i)            
@@ -116,11 +108,11 @@ classdef nn
             end %for(i)
         end %method normalize_input
         
-        function weights = adapt_weights_simple(nn, error)
-            weights = zeros('like', nn.weights);
-            for i = 1:785
+        function weights = adapt_weights_simple(nn, error, inputs)
+            weights = nn.weights;
+            for i = 1:784
                 for j = 1:10
-                    weights(i,j) = nn.learning_rate*error*sample(i);
+                    weights(i,j) = weights(i,j) + nn.learning_rate*error*inputs(i);
                 end %for(j)
             end % for(i)
         end %method adapt_weights
