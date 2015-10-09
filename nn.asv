@@ -39,10 +39,15 @@ classdef nn
            end %for(i)
         end %import
         
-        function nn = learn_regular(nn) %one sample per class everytime; all after another
-            label = zeros(1,10);
+        function nn = learn_regular(nn, epoch_size) %one sample per class everytime; all after another
+            % epoch_size gives the number of iterations before weight
+            % adaption should be done
+            epoch = 0;
+            epoch_error = zeros('like', nn.outputs
             for i=1:850
+               epoch = epoch +1;
                for j=1:10
+                   label = zeros(1,10);
                    sample = nn.database_learn(j,i,:,:);
                    sample = squeeze(sample);
                    for k=1:10   %calculate label-bits
@@ -54,6 +59,7 @@ classdef nn
                    nn.outputs = nn.feedforward(sample);
                    nn.error_learn(i) = nn.error_learn(i) + abs(nn.outputs(j)-label(j));
                end %for(j)
+               
             end %for(i)
         end %learn_regular
         
@@ -62,7 +68,7 @@ classdef nn
         end %learn_random
         
         function output = feedforward(nn, sample)
-            %feed forward:
+            output = zeros(1,10);
             for i = 1:10    %output neurons
                 net = 1 * nn.weights(1,i);
                 for j = 1:784
@@ -89,14 +95,17 @@ classdef nn
         function plot_error(nn)
             plot(nn.error_learn);
         end %plot_error
-        
+
+    end %public methods
+            
+    methods (Access = 'private')
         function normalized = normalize_input(nn, sample)
-            %normalized = zeros(sample);
+            normalized = zeros('like', sample);
             for i=1:28
                 for j=1:28
                     normalized(i,j) = sample(i,j)/255;
                 end %for
             end %for(i)
         end %method normalize_input
-    end
+    end %private methods
 end

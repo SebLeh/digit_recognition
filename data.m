@@ -78,8 +78,8 @@ classdef data
             %loaded(i,:,:) = fread(fileIn,[28 28],'uchar');
             %loaded(i) = transpose(loaded(i));
         end %for(i)
-        %imshow(squeeze(loaded(25,:,:)));
         end %method open
+
     end %methods
 end
 

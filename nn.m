@@ -12,6 +12,7 @@ classdef nn
         error_test;
         weights;
         outputs;
+        inputs;
     end %private
     methods
         function nn = nn()      %constructor
@@ -21,11 +22,12 @@ classdef nn
             nn.database_validate = zeros(10,50,28,28);    %50 sets left untouched for validation
             nn.learning_rate = 0.2;     
             
-            nn.error_learn = zeros(1,850);
-            nn.error_test = zeros(1,100);
+            nn.error_learn = zeros(1,8500);
+            nn.error_test = zeros(1,1000);
             nn.weights = randn(785,10)/10;     % 785 = 28x28 + bias unit  
             
             nn.outputs = zeros(1,10);
+            nn.inputs = zeros(1,784);
         end
         
         function nn = import(nn)
@@ -39,10 +41,16 @@ classdef nn
            end %for(i)
         end %import
         
-        function nn = learn_regular(nn) %one sample per class everytime; all after another
-            label = zeros(1,10);
+        function nn = learn_regular(nn, epoch_size) %one sample per class everytime; all after another
+            % epoch_size gives the number of iterations before weight
+            % adaption should be done
+            epoch = 0;
+            epoch_error = zeros('like', nn.outputs);
+            ii = 0;
             for i=1:850
+               epoch = epoch +1;
                for j=1:10
+                   ii = ii +1;
                    label = zeros(1,10);
                    sample = nn.database_learn(j,i,:,:);
                    sample = squeeze(sample);
@@ -53,8 +61,10 @@ classdef nn
                    end %for(k)
                    sample = nn.normalize_input(sample);
                    nn.outputs = nn.feedforward(sample);
-                   nn.error_learn(i) = nn.error_learn(i) + abs(nn.outputs(j)-label(j));
+                   nn.error_learn(ii) = abs(nn.outputs(j)-label(j));
+                   %nn.weights = nn.adapt_weights_simple(nn.error_learn(ii));
                end %for(j)
+               
             end %for(i)
         end %learn_regular
         
@@ -64,16 +74,19 @@ classdef nn
         
         function output = feedforward(nn, sample)
             output = zeros(1,10);
+            nn.inputs = nn.calc_inputs(sample);
             for i = 1:10    %output neurons
                 net = 1 * nn.weights(1,i);
                 for j = 1:784
+                    %{
                     if mod(j,28) == 0
                         x = 28;
                     else
                         x = mod(j,28);
                     end
                     y = ceil(j/28); %round up to next integer
-                    net = net + sample(x,y)* nn.weights(j+1,i);
+                    %}
+                    net = net + nn.inputs(j)* nn.weights(j+1,i);
                 end % for(j)
                 output(i) = 1 / (1+exp(-net)); % sigmoid
             end % for(i)            
@@ -102,5 +115,29 @@ classdef nn
                 end %for
             end %for(i)
         end %method normalize_input
+        
+        function weights = adapt_weights_simple(nn, error)
+            weights = zeros('like', nn.weights);
+            for i = 1:785
+                for j = 1:10
+                    weights(i,j) = nn.learning_rate*error*sample(i);
+                end %for(j)
+            end % for(i)
+        end %method adapt_weights
+        
+        function inputs = calc_inputs(nn, sample)
+            inputs = zeros('like', nn.inputs);
+            for i = 1:10
+                for j = 1:784
+                    if mod(j,28) == 0
+                        x = 28;
+                    else
+                        x = mod(j,28);
+                    end
+                    y = ceil(j/28); %round up to next integer
+                    inputs(j) = sample(x,y);
+                end %for(j)
+            end %for(i)
+        end % method calc_inputs
     end %private methods
 end
