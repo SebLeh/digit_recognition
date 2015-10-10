@@ -62,8 +62,13 @@ classdef nn
                    sample = nn.normalize_input(sample);
                    nn.inputs = nn.calc_inputs(sample);
                    nn.outputs = nn.feedforward(nn.inputs);
-                   nn.error_learn(ii) = abs(nn.outputs(j)-label(j));
-                   nn.weights = nn.adapt_weights_simple(nn.error_learn(ii), nn.inputs);
+                   for jj = 1:10
+                      nn.error_learn(ii) = nn.error_learn(ii) +  abs(nn.outputs(jj)-label(jj));
+                      nn.error_learn(ii) = abs(nn.outputs(j)-label(j));
+                      %nn.weights = nn.adapt_weights_simple(nn.outputs(jj)-label(jj), nn.inputs, jj);
+                   end
+                   %nn.error_learn(ii) = abs(nn.outputs(j)-label(j));
+                   %nn.weights = nn.adapt_weights_simple(nn.error_learn(ii), nn.inputs);
                end %for(j)
                
             end %for(i)
@@ -88,12 +93,42 @@ classdef nn
             
         end %test
         
-        function nn = validate(nn)
+        function nn = validate(nn, digit, num, label)
+            target = zeros(1,10);
+            inputs = zeros(1,784);
+            outputs = zeros(1,10);
+            class = -1;
+            smp = nn.database_validate(digit+1, num, :, :);
+            smp = squeeze(smp);
+            image = smp;
+            smp = nn.normalize_input(smp);
+            inputs = nn.calc_inputs(smp);
+            output = nn.feedforward(inputs);
+            imshow(image);
+            for i = 1:10
+                if i == label+1
+                    target(i) = 1;
+                end
+            end
+            
+            max = output(1);
+            
+            for i = 2:10
+                
+                if max < output(i)
+                    max = output(i);
+                    class = i;
+                end
+            end
+            
+            max
+            class
             
         end %validate
         
         function plot_error(nn)
             plot(nn.error_learn);
+            %holdon
         end %plot_error
 
     end %public methods
@@ -108,12 +143,12 @@ classdef nn
             end %for(i)
         end %method normalize_input
         
-        function weights = adapt_weights_simple(nn, error, inputs)
+        function weights = adapt_weights_simple(nn, error, inputs, index_out)
             weights = nn.weights;
             for i = 1:784
-                for j = 1:10
-                    weights(i,j) = weights(i,j) + nn.learning_rate*error*inputs(i);
-                end %for(j)
+                %for j = 1:10
+                    weights(i,index_out) = weights(i,index_out) + nn.learning_rate*error*inputs(i);
+                %end %for(j)
             end % for(i)
         end %method adapt_weights
         
