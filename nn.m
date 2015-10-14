@@ -64,11 +64,13 @@ classdef nn
                    nn.outputs = nn.feedforward(nn.inputs);
                    for jj = 1:10
                       nn.error_learn(ii) = nn.error_learn(ii) +  abs(nn.outputs(jj)-label(jj));
-                      nn.error_learn(ii) = abs(nn.outputs(j)-label(j));
-                      %nn.weights = nn.adapt_weights_simple(nn.outputs(jj)-label(jj), nn.inputs, jj);
+                      %%%nn.error_learn(ii) = abs(nn.outputs(j)-label(j));
+                      %error = nn.outputs(jj)-label(jj); %simple
+                      error = nn.outputs(jj)*(1-nn.outputs(jj))*(label(jj)-nn.outputs(jj));
+                      nn.weights = nn.adapt_weights_simple(error, nn.inputs, jj);
                    end
-                   %nn.error_learn(ii) = abs(nn.outputs(j)-label(j));
-                   %nn.weights = nn.adapt_weights_simple(nn.error_learn(ii), nn.inputs);
+                   %%%nn.error_learn(ii) = abs(nn.outputs(j)-label(j));
+                   %%%nn.weights = nn.adapt_weights_simple(nn.error_learn(ii), nn.inputs);
                end %for(j)
                
             end %for(i)
@@ -93,7 +95,7 @@ classdef nn
             
         end %test
         
-        function nn = validate(nn, digit, num, label)
+        function nn = validate(nn, digit, num)
             target = zeros(1,10);
             inputs = zeros(1,784);
             outputs = zeros(1,10);
@@ -106,18 +108,18 @@ classdef nn
             output = nn.feedforward(inputs);
             imshow(image);
             for i = 1:10
-                if i == label+1
+                if i == digit+1
                     target(i) = 1;
                 end
             end
             
             max = output(1);
             
-            for i = 2:10
+            for j = 1:10
                 
-                if max < output(i)
-                    max = output(i);
-                    class = i;
+                if max < output(j)
+                    max = output(j);
+                    class = j-1;
                 end
             end
             
@@ -151,6 +153,10 @@ classdef nn
                 %end %for(j)
             end % for(i)
         end %method adapt_weights
+        
+        function weights = adapt_weights_backprop(nn, error, inputs, index_out)
+           weights = n.weights; 
+        end
         
         function inputs = calc_inputs(nn, sample)
             inputs = zeros('like', nn.inputs);
