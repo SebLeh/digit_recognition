@@ -74,8 +74,14 @@ classdef nn
                end %for(j)
                
             end %for(i)
+            
+            csvwrite('csv_weights.csv',nn.weights);
         end %learn_regular
         
+		function nn = load_weights(nn) %load files from CSV file
+			nn.weights = csvread('csv_weights.csv');
+		end %load_weights
+		
         function nn = learn_random(nn)   % samples are chosen randomly
             
         end %learn_random
@@ -99,7 +105,6 @@ classdef nn
             target = zeros(1,10);
             inputs = zeros(1,784);
             outputs = zeros(1,10);
-            class = -1;
             smp = nn.database_validate(digit+1, num, :, :);
             smp = squeeze(smp);
             image = smp;
@@ -114,6 +119,7 @@ classdef nn
             end
             
             max = output(1);
+            class = 0;
             
             for j = 1:10
                 
