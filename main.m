@@ -6,8 +6,8 @@ import nn;
 NN = nn;
 
 NN = NN.import();
-%NN = NN.learn_regular(1);
-NN = NN.load_weights();
+NN = NN.learn_regular();
+%NN = NN.load_weights();
 NN.plot_error();
 
 NN = NN.validate(0,1); % (digit to test, example no. of digit)

@@ -27,14 +27,14 @@ classdef nn
             nn.learning_rate = 0.2;     
             
             nn.error_learn = zeros(1,8500);
-            nn.error_test = zeros(1000, 1);
+            nn.error_test = zeros(1,1000);
             nn.weights = randn(785,10)/10;     % 785 = 28x28 + bias unit  
             
             nn.outputs = zeros(1,10);
             nn.inputs = zeros(1,784);
             
             nn.test_low = 0; 
-            nn.test_indices = zeros(1000, 1);
+            nn.test_indices = zeros(1,1000);
         end
         
         function nn = import(nn)
@@ -78,7 +78,6 @@ classdef nn
                    if i > 50 %let the network learn the first 50 samples for each digit without testing
                        i_test = i_test + 1;
                        if i_test == 8 % testing NN every eighth iteration
-                          i_test = 0;
                           j_test = j_test +1;
                           sample = squeeze(testData(j_test, :, :));
                           label = testLabels(j_test);
@@ -166,7 +165,7 @@ classdef nn
         
         function plot_error(nn)
             plot(nn.error_learn);
-            hold on;
+            holdon;
             plot(nn.test_indices, nn.error_test, 'r');
         end %plot_error
 
