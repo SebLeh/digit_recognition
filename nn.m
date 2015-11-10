@@ -14,7 +14,8 @@ classdef nn
         outputs;
         inputs;
         
-        test_low;       %storing index where test-error was the smallest
+        test_low;       %storing (test-)index where test-error was the smallest
+        all_low;        %storing the overall-index where test-error was the smallest
         weights_low;    %storing weights of the moment when error was the smallest
         test_indices;   %needed for plotting
     end %private
@@ -85,14 +86,16 @@ classdef nn
                           nn.error_test(j_test) = nn.test(sample, label);
                           nn.test_indices(j_test) = ii;
                           if nn.error_test(j_test) < test_error_low
-                              test_error_low = ii;
+                              test_error_low = nn.error_test(j_test);
                               nn.weights_low = nn.weights;
+                              nn.test_low = j_test;
+                              nn.all_low = ii;
                           end
                        end
                    end
                end %for(j)   
             end %for(i)
-            
+            nn.weights = nn.weights_low;
             csvwrite('csv_weights.csv',nn.weights);
         end %learn_regular
         
@@ -168,6 +171,8 @@ classdef nn
             plot(nn.error_learn);
             hold on;
             plot(nn.test_indices, nn.error_test, 'r');
+            hold on;
+            plot(nn.all_low, nn.error_test(nn.test_low), 'k*');
         end %plot_error
 
     end %public methods
