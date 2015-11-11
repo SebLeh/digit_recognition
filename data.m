@@ -15,7 +15,6 @@ classdef data
     
     properties (Access = 'public')
         number = -1;
-        ex_no_digit = MException('my_exceptions:digits','No single digit; only insert 0, 1, 2, 3, 4, 5, 6, 7, 8 or 9');
     end %public properties
     
     methods        
@@ -65,18 +64,11 @@ classdef data
                 fileIn = fopen(data.file8,'r');
             case 9
                 fileIn = fopen(data.file9,'r');    
-        end %switch number
-        %{
-        t1=fread(fileIn,[28 28],'uchar');
-        t1 = transpose(t1);
-        loaded = t1;
-        %}
+        end %switch 
         
         for i =1:amount
             img = fread(fileIn,[28 28],'uchar');
             loaded(i,:,:) = transpose(img);
-            %loaded(i,:,:) = fread(fileIn,[28 28],'uchar');
-            %loaded(i) = transpose(loaded(i));
         end %for(i)
         end %method open
 
