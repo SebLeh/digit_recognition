@@ -136,11 +136,7 @@ classdef nn
             target = zeros(1,10);
             inputs = zeros(1,784);
             outputs = zeros(1,10);
-            %if flagOfLoad=='X'
-                smp = nn.database_validate(digit+1, num, :, :); %digit+1 because matlab starts counting at 1
-            %else
-            
-            %end
+            smp = nn.database_validate(digit+1, num, :, :); %digit+1 because matlab starts counting at 1
             smp = squeeze(smp);
             image = smp;
             smp = nn.normalize_input(smp);
@@ -152,6 +148,35 @@ classdef nn
                     target(i) = 1;
                 end
             end
+            %just initializing
+            max = output(1); % max output value of NN will be written here
+            class = 0;       % the classification-output of the NN will be written here     
+            for j = 1:10                
+                if max < output(j)
+                    max = output(j);
+                    class = j-1;
+                end
+            end
+            
+            max
+            class
+            
+        end %validate
+        
+        function nn = validateCustomImage(nn,fileName)
+            
+            inputs = zeros(1,784);
+            outputs = zeros(1,10);
+            
+            smp = imread(fileName);
+            
+            smp = squeeze(smp);
+            image = smp;
+            smp = nn.normalize_input(smp);
+            inputs = nn.calc_inputs(smp);
+            output = nn.feedforward(inputs);
+            imshow(image);
+            
             %just initializing
             max = output(1); % max output value of NN will be written here
             class = 0;       % the classification-output of the NN will be written here     

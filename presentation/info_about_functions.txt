@@ -1,0 +1,24 @@
+﻿imresize 
+imresize resizes an image of any type using the specified interpolation method. method is a string that can have one of these values:
+•'nearest' (default) uses nearest neighbor interpolation. 
+•'bilinear' uses bilinear interpolation. 
+•'bicubic' uses bicubic interpolation. 
+B = imresize(A,[mrows ncols],method) returns an image of size 
+[mrows ncols]. If the specified size does not produce the same aspect ratio 
+as the input image has, the output image is distorted.
+
+Interpolation is a process which constructs a continuous function from a set of points. In nearest-neighbor interpolation, the idea is to use the value of the data point or measurement which is closest to the current point. The method is also known as proximal interpolation or, point sampling.
+
+
+
+IM2BW produces binary images from indexed, intensity, or RGB images. To do this, it converts the input image to grayscale format (if it is not already an intensity image), and then converts this grayscale image to binary by thresholding. The output binary image BW has values of 1 (white) for all pixels in the input image with luminance greater than LEVEL and 0 (black) for all other pixels. (Note that you specify LEVEL in the range [0,1],  regardless of the class of the input image.)
+
+
+
+imcomplement
+In the complement of a binary image, zeros become ones and ones become zeros; black and white are reversed
+
+
+
+gray2ind
+The input image I can be logical, uint8, uint16, int16, single, or double and must be real and nonsparse.  I can have any dimension.  The class of the output image X is uint8 if the colormap length is less than or equal to 256 otherwise it is uint16.

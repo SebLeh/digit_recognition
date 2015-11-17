@@ -1,16 +1,17 @@
 clc; clear; close all;
+%imread('numb28.png')
 
-[X,map] = imread('numb.png');
-figure,imshow(X,map)
+X = imread('numb.png');
+figure,imshow(X)
 
-BW = im2bw(X,map,0.4); %converts the indexed image X with colormap map to a binary image.
-%figure, imshow(BW)
+smallBW = imresize(X, [28 28]);
+figure,imshow(smallBW);
 
-smallBW = imresize(BW, [28 28]);
-%figure, imshow(smallBW)
+BW = im2bw(smallBW,0.6); %converts the indexed image X with colormap map to a binary image.
 
-J = imcomplement(smallBW); 
+J = imcomplement(BW); 
 figure, imshow(J)
 
-[X, map] = gray2ind(J,3); %converts the binary image BW to an indexed image X. n specifies the size of the colormap, gray(n). If n is omitted, it defaults to 2.
-imwrite(X,map,'numb28.png')
+X = gray2ind(J,256); %converts the binary image BW to an indexed image X. n specifies the size of the colormap, gray(n). If n is omitted, it defaults to 2.
+
+imwrite(X,'numb28.png')
