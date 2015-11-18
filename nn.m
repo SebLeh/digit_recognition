@@ -9,15 +9,10 @@ classdef nn
     end
     properties(Access = 'private')
         error_learn;
-        %error_test;
         weights;
         outputs;
         inputs;
-        
-        %test_low;       %storing (test-)index where test-error was the smallest
-        %all_low;        %storing the overall-index where test-error was the smallest
-        %weights_low;    %storing weights of the moment when error was the smallest
-        %test_indices;   %needed for plotting
+
     end %private
     methods
         function nn = nn()      %constructor
@@ -28,14 +23,11 @@ classdef nn
             nn.learning_rate = 0.2;     
             
             nn.error_learn = zeros(1,2000);
-            %nn.error_test = zeros(1000, 1);
             nn.weights = randn(785,10)/10;     % 785 = 28x28 + bias unit  
             
             nn.outputs = zeros(1,10);
             nn.inputs = zeros(1,784);
             
-            %nn.test_low = 0; 
-            %nn.test_indices = zeros(1000, 1);
         end
         
         function nn = import(nn)
@@ -50,11 +42,7 @@ classdef nn
         end %import
         
         function nn = learn(nn) %one sample per class everytime; all after another
-            %[testData, testLabels] = nn.prepareTestData();
-            %test_error_low = 9999;
             ii = 0;
-            %i_test = 0;
-            %j_test = 0;
             for i=1:200     %200 samples per class (0 to 9)
                for j=1:10   %the ten classes
                    ii = ii +1; %iterator for error-array (goes up to 2000); to display plot later
@@ -74,28 +62,8 @@ classdef nn
                       error = nn.outputs(jj)*(1-nn.outputs(jj))*(target(jj)-nn.outputs(jj));
                       nn.weights = nn.adapt_weights(error, nn.inputs, jj);
                    end %for(jj)
-                   
-                   %testing outputs with test-data
-                   % if i > 50 %let the network learn the first 50 samples for each digit without testing
-                       % i_test = i_test + 1;
-                       % if i_test == 8 % testing NN every eighth iteration
-                          % i_test = 0;
-                          % j_test = j_test +1;
-                          % sample = squeeze(testData(j_test, :, :));
-                          % label = testLabels(j_test);
-                          % nn.error_test(j_test) = nn.test(sample, label);
-                          % nn.test_indices(j_test) = ii;
-                          % if nn.error_test(j_test) < test_error_low
-                              % test_error_low = nn.error_test(j_test);
-                              % nn.weights_low = nn.weights;
-                              % nn.test_low = j_test;
-                              % nn.all_low = ii;
-                          % end
-                       % end
-                   % end
                end %for(j)   
             end %for(i)
-            %nn.weights = nn.weights_low;
             csvwrite('csv_weights.csv',nn.weights);
         end %learn
         
@@ -113,24 +81,6 @@ classdef nn
                 output(i) = 1 / (1+exp(-net)); % sigmoid
             end % for(i)            
         end %training
-        
-        % function error = test(nn, sample, label)  
-           % error = 0;
-           % sample = nn.normalize_input(sample);
-           % nn.inputs = nn.calc_inputs(sample);
-           % nn.outputs = nn.feedforward(nn.inputs);
-           
-           % target = zeros(1,10);
-           % for i=1:10   %calculate target-bits
-               % if i==label
-                   % target(i) = 1;
-               % end
-           % end %for(k)
-           
-           % for j = 1:10    %iteration through network outputs
-              % error = error +  abs(nn.outputs(j)-target(j));
-           % end %for(jj)
-        % end %test
         
         function nn = validate(nn, digit, num)
             target = zeros(1,10);
@@ -194,10 +144,6 @@ classdef nn
         
         function plot_error(nn)
             plot(nn.error_learn);
-            %hold on;
-            %plot(nn.test_indices, nn.error_test, 'r');
-            %hold on;
-            %plot(nn.all_low, nn.error_test(nn.test_low), 'k*');
         end %plot_error
 
     end %public methods
@@ -235,22 +181,6 @@ classdef nn
                 end %for(j)
             end %for(i)
         end % method calc_inputs
-        
-        % function [preparedData, labels] = prepareTestData(nn)
-            % % putting all test-data in lower dimensional array
-            % % 10x100 -> 1x1000
-            % % samples will be aligned like this: [0, 1, 2, 3, 4, 5, 6, 7, 8,
-            % % 9, 0, 1, 2, 3, ...]            
-            % preparedData = zeros(1000, 28, 28);
-            % labels = zeros(1000, 1);            
-            % k = 0;
-            % for i = 1:100
-               % for j = 1:10
-                   % k = k +1;
-                   % preparedData(k, :, :) = nn.database_test(j, i, :, :);
-                   % labels(k) = j;
-               % end
-            % end
-        % end %pepareTestData
+
     end %private methods
 end
