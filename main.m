@@ -6,11 +6,22 @@ import nn;
 NN = nn;
 
 NN = NN.import();
-NN = NN.learn();
-%NN = NN.load_weights();
-NN.plot_error();
+%NN = NN.learn();
+NN = NN.load_weights();
+%NN.plot_error();
 
-NN = NN.validateCustomImage('numb28.png');
+%NN = NN.validateCustomImage('numb28.png');
+
+accuracy = 0;
+for i=1:50
+   for j=1:10 
+      NN = NN.validate(j-1,i); 
+      accuracy = accuracy + NN.correct;
+   end
+end
+
+accuracy = accuracy / 500;
+accuracy
 
 % NN = NN.validate(0,1); % (digit to test, example no. of digit)
 % NN = NN.validate(0,2);

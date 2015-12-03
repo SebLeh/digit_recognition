@@ -6,8 +6,6 @@ classdef nn
         database_test;       
         database_validate;    
         learning_rate;
-        
-        correct = 0;
     end
     properties(Access = 'private')
         error_learn;
@@ -15,6 +13,7 @@ classdef nn
         outputs;
         inputs;
         
+        correct = 0;
 
     end %private
     methods
@@ -86,7 +85,7 @@ classdef nn
         end %training
         
         function nn = validate(nn, digit, num)
-            nn.correct =0;
+            correct =0;
             
             target = zeros(1,10);
             inputs = zeros(1,784);
@@ -117,8 +116,7 @@ classdef nn
             class
             
             if class == digit
-                nn.correct = 1;
-            end
+                correct = 1
             
         end %validate
         
